@@ -1161,8 +1161,8 @@ typedef void GLvoid;
 #define WGL_TYPE_COLORINDEX_ARB                 0x202C
 
 #define LIST_GL_PROCS(Z) \
-    Z(GLuint WINAPI, glCreateProgram, void) \
     Z(BOOL WINAPI, wglChoosePixelFormatARB, HDC hdc, const int *piAttribIList, const FLOAT *pfAttribFList, UINT nMaxFormats, int *piFormats, UINT *nNumFormats) \
+    Z(GLuint WINAPI, glCreateProgram, void) \
     Z(void WINAPI, glClearColor, GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha) \
     Z(void WINAPI, glClear, GLbitfield mask)
 

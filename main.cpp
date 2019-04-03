@@ -24,7 +24,7 @@ HWND createWindow(const char* className, HINSTANCE instance, int width, int heig
       WS_OVERLAPPEDWINDOW,
       CW_USEDEFAULT,
       CW_USEDEFAULT,
-	  width,
+	    width,
       height,
       NULL,
       NULL,
