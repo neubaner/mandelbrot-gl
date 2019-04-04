@@ -6,33 +6,6 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
-LRESULT CALLBACK WindowEventHandler(HWND window, UINT msg, WPARAM wParam, LPARAM lParam){
-  switch(msg){
-    case WM_KEYDOWN: {
-      char* keys = (char *)GetWindowLongPtr(window, GWLP_USERDATA);
-      //bool wasDown = (lParam & (1 << 30)) != 0;
-      keys[wParam] = true;
-      break;
-    }
-
-    case WM_KEYUP: {
-      char* keys = (char *)GetWindowLongPtr(window, GWLP_USERDATA);
-      keys[wParam] = false;
-      break;
-    }
-
-    case WM_DESTROY: {
-      PostQuitMessage(0);
-      break;
-    }
-
-    default:
-      return DefWindowProcA(window, msg, wParam, lParam);
-  }
-
-  return 0;
-}
-
 HWND createWindow(const char* className, HINSTANCE instance, int width, int height, LPVOID lParam){
   return CreateWindowA(
       className,
@@ -133,6 +106,33 @@ int findPixelFormat(HDC dc){
   }
 
   return pixelFormat;
+}
+
+LRESULT CALLBACK WindowEventHandler(HWND window, UINT msg, WPARAM wParam, LPARAM lParam){
+  switch(msg){
+    case WM_KEYDOWN: {
+      char* keys = (char *)GetWindowLongPtr(window, GWLP_USERDATA);
+      //bool wasDown = (lParam & (1 << 30)) != 0;
+      keys[wParam] = true;
+      break;
+    }
+
+    case WM_KEYUP: {
+      char* keys = (char *)GetWindowLongPtr(window, GWLP_USERDATA);
+      keys[wParam] = false;
+      break;
+    }
+
+    case WM_DESTROY: {
+      PostQuitMessage(0);
+      break;
+    }
+
+    default:
+      return DefWindowProcA(window, msg, wParam, lParam);
+  }
+
+  return 0;
 }
 
 int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nShowCmd){
