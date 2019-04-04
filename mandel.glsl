@@ -2,6 +2,9 @@
 
 uniform int screenHeight;
 uniform int screenWidth;
+uniform float zoom;
+uniform float offsetX;
+uniform float offsetY;
 
 #define MAX_INTERATIONS 256
 
@@ -11,8 +14,9 @@ out vec4 out_color;
 void main(){
   // Screen coords => 0 to 1 range => -2 to 2 range
   vec2 c;
-  c.x = ((gl_FragCoord.x/screenWidth) * 4.0) - 2.0;
-  c.y = ((gl_FragCoord.y/screenHeight) * 4.0) - 2.0;
+
+  c.x = (((gl_FragCoord.x/float(screenWidth)) * 4.0) - 2.0) * zoom + offsetX;
+  c.y = (((gl_FragCoord.y/float(screenHeight)) * 4.0) - 2.0) * zoom + offsetY;
 
   vec2 z = vec2(0.0, 0.0);
   int i;
@@ -28,6 +32,6 @@ void main(){
     z.y = y;
   }
   
-  float color = i == MAX_INTERATIONS ? 0.0 : 1.0; //(float(i) / float(MAX_INTERATIONS)) * 1.0;
+  float color = i == MAX_INTERATIONS ? 0.0 : (float(i) / float(MAX_INTERATIONS)) * 1.0;
   out_color = vec4(vec3(color), 1.0);
 }

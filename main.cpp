@@ -6,11 +6,26 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
-LRESULT CALLBACK WindowEventHandler(HWND window, UINT msg, WPARAM  wParam, LPARAM  lParam){
+LRESULT CALLBACK WindowEventHandler(HWND window, UINT msg, WPARAM wParam, LPARAM lParam){
   switch(msg){
-    case WM_DESTROY:
+    case WM_KEYDOWN: {
+      char* keys = (char *)GetWindowLongPtr(window, GWLP_USERDATA);
+      //bool wasDown = (lParam & (1 << 30)) != 0;
+      keys[wParam] = true;
+      break;
+    }
+
+    case WM_KEYUP: {
+      char* keys = (char *)GetWindowLongPtr(window, GWLP_USERDATA);
+      keys[wParam] = false;
+      break;
+    }
+
+    case WM_DESTROY: {
       PostQuitMessage(0);
       break;
+    }
+
     default:
       return DefWindowProcA(window, msg, wParam, lParam);
   }
@@ -18,7 +33,7 @@ LRESULT CALLBACK WindowEventHandler(HWND window, UINT msg, WPARAM  wParam, LPARA
   return 0;
 }
 
-HWND createWindow(const char* className, HINSTANCE instance, int width, int height){
+HWND createWindow(const char* className, HINSTANCE instance, int width, int height, LPVOID lParam){
   return CreateWindowA(
       className,
       "MandelGL",
@@ -30,7 +45,7 @@ HWND createWindow(const char* className, HINSTANCE instance, int width, int heig
       NULL,
       NULL,
       instance,
-      NULL
+      lParam
     );
 }
 
@@ -52,7 +67,7 @@ void setupOpenGL(HINSTANCE instance){
   windowClass.lpszMenuName = "DumbGLWindow";
   RegisterClassA(&windowClass);
 
-  HWND dumbWindow = createWindow("DumbGLWindow", instance, 0, 0);
+  HWND dumbWindow = createWindow("DumbGLWindow", instance, 0, 0, NULL);
   HDC dc = GetDC(dumbWindow);
 
   // Create a dumb GL context to get all gl/extensions procedures
@@ -121,13 +136,15 @@ int findPixelFormat(HDC dc){
 }
 
 int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nShowCmd){
+  char keys[256] = {};
+
   setupOpenGL(instance);
 
   WNDCLASSA windowClass;
   windowClass.style = CS_OWNDC;
   windowClass.lpfnWndProc = WindowEventHandler;
   windowClass.cbClsExtra = 0;
-  windowClass.cbWndExtra = 0;
+  windowClass.cbWndExtra = sizeof(char *); // Pointer to keys
   windowClass.hInstance = instance;
   windowClass.hIcon = NULL;
   windowClass.hCursor = NULL;
@@ -143,13 +160,14 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nSh
   const int screenWidth = 600;
   const int screenHeight = 600;
 
-  HWND window = createWindow(windowClass.lpszClassName, instance, screenWidth, screenHeight);
+  HWND window = createWindow(windowClass.lpszClassName, instance, screenWidth, screenHeight, keys);
    
   if(window == NULL){
     printf("Error creating window %d", GetLastError());
     return -1;
   }
 
+  SetWindowLongPtr(window, GWLP_USERDATA, (LONG_PTR)keys);
   HDC dc = GetDC(window);
   int pixelFormat = findPixelFormat(dc);
 
@@ -164,10 +182,14 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nSh
   UpdateWindow(window);
   RenderMandelData data = setupRenderMandel();
 
+  float zoom = 1;
+  float offsetX = 0;
+  float offsetY = 0;
+
   MSG msg;
   bool running = true;
   while(running)
-  {
+  { 
     while(PeekMessageA(&msg, NULL, 0, 0, PM_REMOVE) != 0) {
       if (msg.message == WM_QUIT) {
         running = false;
@@ -178,7 +200,26 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nSh
       }
     }
 
-    renderMandel(data, screenWidth, screenHeight);
+    if(keys[VK_RIGHT]){
+      offsetX += 0.1 * zoom;
+    }
+    if(keys[VK_LEFT]){
+      offsetX -= 0.1 * zoom;
+    }
+    if(keys[VK_UP]){
+      offsetY += 0.1 * zoom;
+    }
+    if(keys[VK_DOWN]){
+      offsetY -= 0.1 * zoom;
+    }
+    if(keys[VK_OEM_PLUS]){
+      zoom /= 1.1;
+    }
+    if(keys[VK_OEM_MINUS]){
+      zoom *= 1.1;
+    }
+
+    renderMandel(data, screenWidth, screenHeight, offsetX, offsetY, zoom);
     SwapBuffers(dc);
   }
 

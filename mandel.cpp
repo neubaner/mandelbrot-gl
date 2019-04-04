@@ -36,7 +36,7 @@ RenderMandelData setupRenderMandel(){
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-  static GLuint elements[] = {
+  GLuint elements[] = {
     0, 1, 3,
     1, 2, 3,
   };
@@ -88,13 +88,20 @@ RenderMandelData setupRenderMandel(){
   return { program, vao };
 }
 
-void renderMandel(RenderMandelData data, int screenWidth, int screenHeight){
+void renderMandel(RenderMandelData data, int screenWidth, int screenHeight, float offsetX, float offsetY, float zoom){
   glUseProgram(data.program);
 
   int screenWidthLoc = glGetUniformLocation(data.program, "screenWidth");
   int screenHeightLoc = glGetUniformLocation(data.program, "screenHeight");
+  int offsetXLoc = glGetUniformLocation(data.program, "offsetX");
+  int offsetYLoc = glGetUniformLocation(data.program, "offsetY");
+  int zoomLoc = glGetUniformLocation(data.program, "zoom");
+
   glUniform1i(screenWidthLoc, screenWidth);
   glUniform1i(screenHeightLoc, screenHeight);
+  glUniform1f(offsetXLoc, offsetX);
+  glUniform1f(offsetYLoc, offsetY);
+  glUniform1f(zoomLoc, zoom);
 
   glBindVertexArray(data.vao);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const GLvoid *)0);
