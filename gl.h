@@ -1208,12 +1208,18 @@ typedef void GLvoid;
     Z(void WINAPI,      glBindFragDataLocation,     GLuint program, GLuint colorNumber, const char *name) \
     Z(void WINAPI,      glLinkProgram,              GLuint program) \
     Z(void WINAPI,      glGenBuffers,               GLsizei n, GLuint *buffers) \
+    Z(void WINAPI,      glGenVertexArrays,          GLsizei n, GLuint *arrays) \
     Z(void WINAPI,      glBindBuffer,               GLenum target, GLuint buffer) \
+    Z(void WINAPI,      glBindVertexArray,          GLuint array) \
     Z(void WINAPI,      glBufferData,               GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage) \
     Z(GLint WINAPI,     glGetAttribLocation,        GLuint program, const GLchar *name) \
+    Z(GLint WINAPI,     glGetUniformLocation,       GLuint program, const GLchar *name) \
     Z(void WINAPI,      glVertexAttribPointer,      GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer) \
     Z(void WINAPI,      glEnableVertexAttribArray,  GLuint index) \
+    Z(void WINAPI,      glGetProgramiv,             GLuint program, GLenum pname, GLint *params) \
+    Z(void WINAPI,      glGetProgramInfoLog,        GLuint program, GLsizei maxLength, GLsizei *length, GLchar *infoLog)\
     Z(void WINAPI,      glUseProgram,               GLuint program) \
+    Z(void WINAPI,      glUniform1i,                GLint location, GLint v0) \
     Z(void WINAPI,      glDrawElements,             GLenum mode, GLsizei count, GLenum type, const GLvoid *indices) \
     Z(void WINAPI,      glDrawArrays,               GLenum mode, GLint first, GLsizei count) \
     Z(void WINAPI,      glClearColor,               GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha) \

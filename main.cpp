@@ -140,7 +140,10 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nSh
     return -1;
   }
 
-  HWND window = createWindow(windowClass.lpszClassName, instance, 800, 600);
+  const int screenWidth = 600;
+  const int screenHeight = 600;
+
+  HWND window = createWindow(windowClass.lpszClassName, instance, screenWidth, screenHeight);
    
   if(window == NULL){
     printf("Error creating window %d", GetLastError());
@@ -159,7 +162,7 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nSh
 
   ShowWindow(window, nShowCmd);
   UpdateWindow(window);
-  setupRenderMandel();
+  RenderMandelData data = setupRenderMandel();
 
   MSG msg;
   bool running = true;
@@ -175,10 +178,7 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nSh
       }
     }
 
-    glClearColor(1.0f, 0.5f, 0.5f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-    renderMandel();
-
+    renderMandel(data, screenWidth, screenHeight);
     SwapBuffers(dc);
   }
 

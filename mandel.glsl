@@ -1,26 +1,33 @@
 #version 330 core
 
-uniform int maxInterations;
+uniform int screenHeight;
+uniform int screenWidth;
 
+#define MAX_INTERATIONS 256
+
+in vec4 gl_FragCoord;
 out vec4 out_color;
 
 void main(){
-  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-  /*
-  int i;
-  vec2 c = vec2()
-  vec2 z = vec2(0.0, 0.0);
+  // Screen coords => 0 to 1 range => -2 to 2 range
+  vec2 c;
+  c.x = ((gl_FragCoord.x/screenWidth) * 4.0) - 2.0;
+  c.y = ((gl_FragCoord.y/screenHeight) * 4.0) - 2.0;
 
-  for(i=0; i < maxInterations && )
-  while(n < maxInterations && z.real*z.real + z.imaginary*z.imaginary < 2*2)
-  {
-    z = maldelFunc(z, c);
-    n++;
+  vec2 z = vec2(0.0, 0.0);
+  int i;
+
+  for(i=0; i < MAX_INTERATIONS; i++){
+    float x = (z.x * z.x - z.y * z.y) + c.x;
+    float y = (z.x * z.y + z.y * z.x) + c.y;
+
+    if((x * x + y * y) > 4.0){
+      break;
+    }
+    z.x = x;
+    z.y = y;
   }
-  if(n == maxiteration)
-    mandelSet[y*width + x] = 0;
-  else
-    mandelSet[y*width + x] = map(n, 0, maxiteration, 0, 1);
-  gl_FragColor = 
-  */
+  
+  float color = i == MAX_INTERATIONS ? 0.0 : 1.0; //(float(i) / float(MAX_INTERATIONS)) * 1.0;
+  out_color = vec4(vec3(color), 1.0);
 }
