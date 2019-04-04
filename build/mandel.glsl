@@ -1,11 +1,11 @@
-#version 330 core
+#version 150 core
 
 uniform int maxInterations;
 
-out vec4 out_color;
+out out_color;
 
 void main(){
-  gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
+  out_color = vec4(1.0, 1.0, 1.0, 1.0);
   /*
   int i;
   vec2 c = vec2()

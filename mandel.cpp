@@ -4,20 +4,23 @@
 #include <stdlib.h>
 
 static const char* vertexShaderContent = 
-"#version 150 core"
-"in vec2 position;"
-""
-"void main() {"
-"  gl_Position = vec4(position, 0.0, 1.0);"
-"}";
+"#version 330 core\n"
+"layout (location = 0) in vec2 position;\n"
+"\n"
+"void main() {\n"
+"  gl_Position = vec4(position, 0.0, 1.0);\n"
+"}\n";
 
 void setupRenderMandel(){
-  static float vertices[] = {
-    -1.0f, 1.0f,
-    1.0f, 1.0f,
-    1.0f, -1.0f,
-    -1.0f, -1.0f
-  };
+  int success;
+  GLchar infoLog[512];
+
+  GLfloat vertices[] = {
+        -0.5f,  0.5f, // Top-left
+         0.5f,  0.5f, // Top-right
+         0.5f, -0.5f, // Bottom-right
+        -0.5f, -0.5f,  // Bottom-left
+    };
   GLuint vbo;
   glGenBuffers(1, &vbo);
   glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -32,30 +35,37 @@ void setupRenderMandel(){
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 
-  int program = glCreateProgram();
-
   GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
   glShaderSource(vertexShader, 1, &vertexShaderContent, NULL);
   glCompileShader(vertexShader);
-  glAttachShader(program, vertexShader);
+  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+  if(!success)
+  {
+      glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+      printf("Error compiling shader %s\n", infoLog);
+  };
 
   char* fragShaderContents = readFile("mandel.glsl", NULL);
   GLuint fragShader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragShader, 1, &fragShaderContents, NULL);
+  glShaderSource(fragShader, 1, (const GLchar **)&fragShaderContents, NULL);
   glCompileShader(fragShader);
-  glAttachShader(program, fragShader);
+  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+  if(!success)
+  {
+      glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+      printf("Error compiling shader %s\n", infoLog);
+  };
 
-  glBindFragDataLocation(program, 0, "outColor");
+  int program = glCreateProgram();
+  glAttachShader(program, vertexShader);
+  glAttachShader(program, fragShader);
   glLinkProgram(program);
   glUseProgram(program);
 
-  GLint positionAttr = glGetAttribLocation(program, "position");
-  glVertexAttribPointer(positionAttr, 2, GL_FLOAT, GL_FALSE, 0, 0);
-  glEnableVertexAttribArray(positionAttr);
 
   free(fragShaderContents);
 }
 
 void renderMandel(){
-  glDrawElements(GL_TRIANGLES, )
+  glDrawArrays(GL_TRIANGLES, 0, 3);
 }

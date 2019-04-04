@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include "gl.cpp"
+#include "mandel.cpp"
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -33,20 +34,25 @@ HWND createWindow(const char* className, HINSTANCE instance, int width, int heig
     );
 }
 
+LRESULT CALLBACK DumbWindowEventHandler(HWND window, UINT msg, WPARAM  wParam, LPARAM  lParam) {
+	return DefWindowProcA(window, msg, wParam, lParam);
+}
+
 void setupOpenGL(HINSTANCE instance){
   WNDCLASSA windowClass;
   windowClass.style = CS_OWNDC;
-  windowClass.lpfnWndProc = NULL;
+  windowClass.lpfnWndProc = DumbWindowEventHandler;
   windowClass.cbClsExtra = 0;
   windowClass.cbWndExtra = 0;
   windowClass.hInstance = instance;
   windowClass.hIcon = NULL;
   windowClass.hCursor = NULL;
   windowClass.hbrBackground = NULL;
+  windowClass.lpszClassName = "DumbGLWindow";
   windowClass.lpszMenuName = "DumbGLWindow";
-  windowClass.lpszClassName = windowClass.lpszMenuName;
+  RegisterClassA(&windowClass);
 
-  HWND dumbWindow = createWindow(windowClass.lpszClassName, instance, 0, 0);
+  HWND dumbWindow = createWindow("DumbGLWindow", instance, 0, 0);
   HDC dc = GetDC(dumbWindow);
 
   // Create a dumb GL context to get all gl/extensions procedures
@@ -72,9 +78,17 @@ void setupOpenGL(HINSTANCE instance){
   };
 
   int dummyPixelFormat = ChoosePixelFormat(dc, &pfd);
-  SetPixelFormat(dc, dummyPixelFormat, &pfd);
+  DescribePixelFormat(dc, dummyPixelFormat, sizeof(pfd), &pfd);
+  if(SetPixelFormat(dc, dummyPixelFormat, &pfd) == FALSE) {
+    printf("Error Settings pixel format %x", GetLastError());
+    abort();
+  }
 
   HGLRC glCtx = wglCreateContext(dc);
+  if (glCtx == NULL) {
+    printf("Could not create OpenGL Context %d", GetLastError());
+  }
+
   wglMakeCurrent(dc, glCtx);
 
   loadGlProcs();
@@ -107,6 +121,8 @@ int findPixelFormat(HDC dc){
 }
 
 int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nShowCmd){
+  setupOpenGL(instance);
+
   WNDCLASSA windowClass;
   windowClass.style = CS_OWNDC;
   windowClass.lpfnWndProc = WindowEventHandler;
@@ -123,8 +139,6 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nSh
     printf("Error registering window class %d\n", GetLastError());
     return -1;
   }
-
-  setupOpenGL(instance);
 
   HWND window = createWindow(windowClass.lpszClassName, instance, 800, 600);
    
@@ -145,6 +159,7 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nSh
 
   ShowWindow(window, nShowCmd);
   UpdateWindow(window);
+  setupRenderMandel();
 
   MSG msg;
   bool running = true;
@@ -161,7 +176,8 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nSh
     }
 
     glClearColor(1.0f, 0.5f, 0.5f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
+    renderMandel();
 
     SwapBuffers(dc);
   }
