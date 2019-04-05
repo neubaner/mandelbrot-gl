@@ -200,25 +200,27 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nSh
       }
     }
 
-    if(keys[VK_RIGHT]){
+    if(keys['D'] || keys[VK_RIGHT]){
       offsetX += 0.1 * zoom;
     }
-    if(keys[VK_LEFT]){
+    if(keys['A'] || keys[VK_LEFT]){
       offsetX -= 0.1 * zoom;
     }
-    if(keys[VK_UP]){
+    if(keys['W'] || keys[VK_UP]){
       offsetY += 0.1 * zoom;
     }
-    if(keys[VK_DOWN]){
+    if(keys['S'] || keys[VK_DOWN]){
       offsetY -= 0.1 * zoom;
     }
-    if(keys[VK_OEM_PLUS]){
+    if(keys[VK_ADD] || keys[VK_OEM_PLUS]){
       zoom /= 1.1;
     }
-    if(keys[VK_OEM_MINUS]){
+    if(keys[VK_SUBTRACT] || keys[VK_OEM_MINUS]){
       zoom *= 1.1;
     }
 
+    glClearColor(0.5, 0.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     renderMandel(data, screenWidth, screenHeight, offsetX, offsetY, zoom);
     SwapBuffers(dc);
   }

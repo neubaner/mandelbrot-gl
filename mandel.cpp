@@ -26,10 +26,10 @@ RenderMandelData setupRenderMandel(){
   glBindVertexArray(vao);
 
   GLfloat vertices[] = {
+    -1.0f,  1.0f, // Top-left
      1.0f,  1.0f, // Top-right
      1.0f, -1.0f, // Bottom-right
     -1.0f, -1.0f,  // Bottom-left
-    -1.0f,  1.0f, // Top-left
   };
   GLuint vbo;
   glGenBuffers(1, &vbo);
@@ -37,8 +37,8 @@ RenderMandelData setupRenderMandel(){
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
   GLuint elements[] = {
-    0, 1, 3,
-    1, 2, 3,
+    0, 1, 2,
+    2, 3, 0,
   };
   GLuint ebo;
   glGenBuffers(1, &ebo);
@@ -71,6 +71,7 @@ RenderMandelData setupRenderMandel(){
   int program = glCreateProgram();
   glAttachShader(program, vertexShader);
   glAttachShader(program, fragShader);
+  glBindFragDataLocation(program, 0, "out_color");
   glLinkProgram(program);
   glGetProgramiv(program, GL_LINK_STATUS, &success);
   if(!success) {
@@ -82,6 +83,10 @@ RenderMandelData setupRenderMandel(){
 
   glVertexAttribPointer(positionLoc, 2, GL_FLOAT, GL_FALSE, 0, (void *)0);
   glEnableVertexAttribArray(positionLoc);
+
+  glBindVertexArray(0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
   free(fragShaderContents);
 

@@ -1215,7 +1215,9 @@ typedef void GLvoid;
     Z(GLint WINAPI,     glGetAttribLocation,        GLuint program, const GLchar *name) \
     Z(GLint WINAPI,     glGetUniformLocation,       GLuint program, const GLchar *name) \
     Z(void WINAPI,      glVertexAttribPointer,      GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer) \
+    Z(void WINAPI,      glEnableClientState,        GLenum cap) \
     Z(void WINAPI,      glEnableVertexAttribArray,  GLuint index) \
+    Z(void WINAPI,      glDisableVertexAttribArray, GLuint index) \
     Z(void WINAPI,      glGetProgramiv,             GLuint program, GLenum pname, GLint *params) \
     Z(void WINAPI,      glGetProgramInfoLog,        GLuint program, GLsizei maxLength, GLsizei *length, GLchar *infoLog)\
     Z(void WINAPI,      glUseProgram,               GLuint program) \
