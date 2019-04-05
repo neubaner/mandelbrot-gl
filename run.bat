@@ -1,1 +1,1 @@
-build.bat && build\main.exe
+build.bat && main.exe
