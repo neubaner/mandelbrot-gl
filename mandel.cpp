@@ -1,7 +1,18 @@
+#include <stdlib.h>
+#include <assert.h>
+
 #include "gl.h"
 #include "util.h"
+#include "mandel.h"
 
-#include <stdlib.h>
+enum MandelKey {
+  MandelKeyUp,
+  MandelKeyDown,
+  MandelKeyLeft,
+  MandelKeyRight,
+  MandelKeyZoomIn,
+  MandelKeyZoomOut,
+};
 
 static const char* vertexShaderContent = 
 "#version 330 core\n"
@@ -14,6 +25,9 @@ static const char* vertexShaderContent =
 struct RenderMandelData {
   int program;
   GLuint vao;
+  double offsetX;
+  double offsetY;
+  double zoom;
 };
 
 RenderMandelData setupRenderMandel(){
@@ -86,6 +100,31 @@ RenderMandelData setupRenderMandel(){
   free(fragShaderContents);
 
   return { program, vao };
+}
+
+void mandelHandleInput(RenderMandelData* data, MandelKey key){
+  switch(key){
+    case MandelKeyUp:
+      data->offsetY += 0.1 * data->zoom;
+      break;
+    case MandelKeyDown:
+      data->offsetY -= 0.1 * data->zoom;
+      break;
+    case MandelKeyLeft:
+      data->offsetX -= 0.1 * data->zoom;
+      break;
+    case MandelKeyRight:
+      data->offsetY += 0.1 * data->zoom;
+      break;
+    case MandelKeyZoomIn:
+      data->zoom /= 1.1;
+      break;
+    case MandelKeyZoomOut:
+      data->zoom *= 1.1;
+      break;
+    default:
+      assert(true);
+  }
 }
 
 void renderMandel(RenderMandelData data, int screenWidth, int screenHeight, float offsetX, float offsetY, float zoom){
