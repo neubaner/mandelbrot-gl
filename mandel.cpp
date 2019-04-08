@@ -107,9 +107,6 @@ RenderMandelData setupRenderMandel(){
   return { program, vao };
 }
 
-<<<<<<< HEAD
-void renderMandel(RenderMandelData data, int screenWidth, int screenHeight, double offsetX, double offsetY, double zoom){
-=======
 void mandelHandleInput(RenderMandelData* data, MandelKey key){
   switch(key){
     case MandelKeyUp:
@@ -136,7 +133,6 @@ void mandelHandleInput(RenderMandelData* data, MandelKey key){
 }
 
 void renderMandel(RenderMandelData data, int screenWidth, int screenHeight, float offsetX, float offsetY, float zoom){
->>>>>>> 55d16d9... prep for platform independent code
   glUseProgram(data.program);
 
   int screenWidthLoc = glGetUniformLocation(data.program, "screenWidth");
