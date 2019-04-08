@@ -1201,39 +1201,6 @@ typedef void GLvoid;
 #endif
 
 #define LIST_GL_PROCS(Z) \
-<<<<<<< HEAD
-    Z(BOOL WINAPI,      wglChoosePixelFormatARB,    HDC hdc, const int *piAttribIList, const FLOAT *pfAttribFList, UINT nMaxFormats, int *piFormats, UINT *nNumFormats) \
-    Z(GLuint WINAPI,    glCreateProgram,            void) \
-    Z(void WINAPI,      glAttachShader,             GLuint program, GLuint shader) \
-    Z(void WINAPI,      glShaderSource,             GLuint shader, GLsizei count, const GLchar **string, const GLint *length) \
-    Z(GLuint WINAPI,    glCreateShader,             GLenum shaderType) \
-    Z(GLuint WINAPI,    glCompileShader,            GLuint shader) \
-    Z(void WINAPI,      glGetShaderiv,              GLuint shader, GLenum pname, GLint *params) \
-    Z(void WINAPI,      glGetShaderInfoLog,         GLuint shader, GLsizei maxLength, GLsizei *length, GLchar *infoLog) \
-    Z(void WINAPI,      glBindFragDataLocation,     GLuint program, GLuint colorNumber, const char *name) \
-    Z(void WINAPI,      glLinkProgram,              GLuint program) \
-    Z(void WINAPI,      glGenBuffers,               GLsizei n, GLuint *buffers) \
-    Z(void WINAPI,      glGenVertexArrays,          GLsizei n, GLuint *arrays) \
-    Z(void WINAPI,      glBindBuffer,               GLenum target, GLuint buffer) \
-    Z(void WINAPI,      glBindVertexArray,          GLuint array) \
-    Z(void WINAPI,      glBufferData,               GLenum target, GLsizeiptr size, const GLvoid *data, GLenum usage) \
-    Z(GLint WINAPI,     glGetAttribLocation,        GLuint program, const GLchar *name) \
-    Z(GLint WINAPI,     glGetUniformLocation,       GLuint program, const GLchar *name) \
-    Z(void WINAPI,      glVertexAttribPointer,      GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer) \
-    Z(void WINAPI,      glEnableClientState,        GLenum cap) \
-    Z(void WINAPI,      glEnableVertexAttribArray,  GLuint index) \
-    Z(void WINAPI,      glDisableVertexAttribArray, GLuint index) \
-    Z(void WINAPI,      glGetProgramiv,             GLuint program, GLenum pname, GLint *params) \
-    Z(void WINAPI,      glGetProgramInfoLog,        GLuint program, GLsizei maxLength, GLsizei *length, GLchar *infoLog)\
-    Z(void WINAPI,      glUseProgram,               GLuint program) \
-    Z(void WINAPI,      glUniform1i,                GLint location, GLint v0) \
-    Z(void WINAPI,      glUniform1f,                GLint location, GLfloat v0) \
-    Z(void WINAPI,      glUniform1d,                GLint location, double v0) \
-    Z(void WINAPI,      glDrawElements,             GLenum mode, GLsizei count, GLenum type, const GLvoid *indices) \
-    Z(void WINAPI,      glDrawArrays,               GLenum mode, GLint first, GLsizei count) \
-    Z(void WINAPI,      glClearColor,               GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha) \
-    Z(void WINAPI,      glClear,                    GLbitfield mask)
-=======
     Z(GLuint PREFIX_GL_PROC,    glCreateProgram,            void) \
     Z(void PREFIX_GL_PROC,      glAttachShader,             GLuint program, GLuint shader) \
     Z(void PREFIX_GL_PROC,      glShaderSource,             GLuint shader, GLsizei count, const GLchar **string, const GLint *length) \
@@ -1261,7 +1228,6 @@ typedef void GLvoid;
     Z(void PREFIX_GL_PROC,      glDrawArrays,               GLenum mode, GLint first, GLsizei count) \
     Z(void PREFIX_GL_PROC,      glClearColor,               GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha) \
     Z(void PREFIX_GL_PROC,      glClear,                    GLbitfield mask)
->>>>>>> 55d16d9... prep for platform independent code
 
 #define DEFINE_GL_PROCS(ret, name, ...) typedef ret name##proc(__VA_ARGS__); static name##proc * name;
 #define LOAD_GL_PROCS(ret, name, ...) name = (name##proc *)loadGlProc(#name);
