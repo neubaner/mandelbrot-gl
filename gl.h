@@ -1223,6 +1223,7 @@ typedef void GLvoid;
     Z(void WINAPI,      glUseProgram,               GLuint program) \
     Z(void WINAPI,      glUniform1i,                GLint location, GLint v0) \
     Z(void WINAPI,      glUniform1f,                GLint location, GLfloat v0) \
+    Z(void WINAPI,      glUniform1d,                GLint location, double v0) \
     Z(void WINAPI,      glDrawElements,             GLenum mode, GLsizei count, GLenum type, const GLvoid *indices) \
     Z(void WINAPI,      glDrawArrays,               GLenum mode, GLint first, GLsizei count) \
     Z(void WINAPI,      glClearColor,               GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha) \

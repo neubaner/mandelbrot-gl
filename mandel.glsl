@@ -2,9 +2,9 @@
 
 uniform int screenHeight;
 uniform int screenWidth;
-uniform float zoom = 1.0;
-uniform float offsetX = 0.0;
-uniform float offsetY = 0.0;
+uniform double zoom = 1.0;
+uniform double offsetX = 0.0;
+uniform double offsetY = 0.0;
 
 #define MAX_INTERATIONS 256
 
@@ -24,8 +24,8 @@ void main(){
   // Screen coords => 0 to 1 range => -2 to 2 range
   dvec2 c;
   
-  c.x = (((double(gl_FragCoord.x) / double(screenWidth)) * 4.0) - 2.0) * double(zoom) + double(offsetX);
-  c.y = (((double(gl_FragCoord.y) / double(screenHeight)) * 4.0) - 2.0) * double(zoom) + double(offsetY);
+  c.x = (((double(gl_FragCoord.x) / double(screenWidth)) * 4.0) - 2.0) * zoom + offsetX;
+  c.y = (((double(gl_FragCoord.y) / double(screenHeight)) * 4.0) - 2.0) * zoom + offsetY;
 
   dvec2 z = dvec2(0.0, 0.0);
   int i;

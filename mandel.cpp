@@ -93,7 +93,7 @@ RenderMandelData setupRenderMandel(){
   return { program, vao };
 }
 
-void renderMandel(RenderMandelData data, int screenWidth, int screenHeight, float offsetX, float offsetY, float zoom){
+void renderMandel(RenderMandelData data, int screenWidth, int screenHeight, double offsetX, double offsetY, double zoom){
   glUseProgram(data.program);
 
   int screenWidthLoc = glGetUniformLocation(data.program, "screenWidth");
@@ -104,9 +104,9 @@ void renderMandel(RenderMandelData data, int screenWidth, int screenHeight, floa
 
   glUniform1i(screenWidthLoc, screenWidth);
   glUniform1i(screenHeightLoc, screenHeight);
-  glUniform1f(offsetXLoc, offsetX);
-  glUniform1f(offsetYLoc, offsetY);
-  glUniform1f(zoomLoc, zoom);
+  glUniform1d(offsetXLoc, offsetX);
+  glUniform1d(offsetYLoc, offsetY);
+  glUniform1d(zoomLoc, zoom);
 
   glBindVertexArray(data.vao);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const GLvoid *)0);

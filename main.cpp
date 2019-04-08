@@ -6,7 +6,7 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 
-HWND createWindow(const char* className, HINSTANCE instance, int width, int height, LPVOID lParam){
+HWND createWindow(const char* className, HINSTANCE instance, int width, int height){
   return CreateWindowA(
       className,
       "MandelGL",
@@ -18,7 +18,7 @@ HWND createWindow(const char* className, HINSTANCE instance, int width, int heig
       NULL,
       NULL,
       instance,
-      lParam
+      NULL
     );
 }
 
@@ -40,7 +40,7 @@ void setupOpenGL(HINSTANCE instance){
   windowClass.lpszMenuName = "DumbGLWindow";
   RegisterClassA(&windowClass);
 
-  HWND dumbWindow = createWindow("DumbGLWindow", instance, 0, 0, NULL);
+  HWND dumbWindow = createWindow("DumbGLWindow", instance, 0, 0);
   HDC dc = GetDC(dumbWindow);
 
   // Create a dumb GL context to get all gl/extensions procedures
@@ -160,7 +160,7 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nSh
   const int screenWidth = 600;
   const int screenHeight = 600;
 
-  HWND window = createWindow(windowClass.lpszClassName, instance, screenWidth, screenHeight, keys);
+  HWND window = createWindow(windowClass.lpszClassName, instance, screenWidth, screenHeight);
    
   if(window == NULL){
     printf("Error creating window %d", GetLastError());
@@ -182,9 +182,9 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nSh
   UpdateWindow(window);
   RenderMandelData data = setupRenderMandel();
 
-  float zoom = 1;
-  float offsetX = 0;
-  float offsetY = 0;
+  double zoom = 1;
+  double offsetX = 0;
+  double offsetY = 0;
 
   MSG msg;
   bool running = true;
