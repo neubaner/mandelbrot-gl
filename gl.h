@@ -1,8 +1,6 @@
 #ifndef PLATFORM_GL_H
 #define PLATFORM_GL_H
 
-#include <windows.h>
-
 typedef char GLchar;
 typedef unsigned int GLenum;
 typedef unsigned char GLboolean;
