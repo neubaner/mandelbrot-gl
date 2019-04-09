@@ -1,1 +1,1 @@
-build.bat && main.exe
+build.bat && platform_windows.exe

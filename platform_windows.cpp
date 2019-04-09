@@ -111,18 +111,49 @@ int findPixelFormat(HDC dc){
   return pixelFormat;
 }
 
+void setMandelKeys(char* keys, WPARAM wParam, bool value){
+  switch(wParam){
+    case VK_LEFT:
+    case 'A': {
+      keys[MandelKeyLeft] = value;
+    } break;
+
+    case VK_RIGHT:
+    case 'D': {
+      keys[MandelKeyRight] = value;
+    } break;
+
+    case VK_UP:
+    case 'W': {
+      keys[MandelKeyUp] = value;
+    } break;
+
+    case VK_DOWN:
+    case 'S': {
+      keys[MandelKeyDown] = value;
+    } break;
+
+    case VK_ADD: {
+      keys[MandelKeyZoomIn] = value;
+    } break;
+
+    case VK_SUBTRACT: {
+      keys[MandelKeyZoomOut] = value;
+    } break;
+  }
+}
+
 LRESULT CALLBACK WindowEventHandler(HWND window, UINT msg, WPARAM wParam, LPARAM lParam){
   switch(msg){
     case WM_KEYDOWN: {
       char* keys = (char *)GetWindowLongPtr(window, GWLP_USERDATA);
-      //bool wasDown = (lParam & (1 << 30)) != 0;
-      keys[wParam] = true;
+      setMandelKeys(keys, wParam, true);   
       break;
     }
 
     case WM_KEYUP: {
       char* keys = (char *)GetWindowLongPtr(window, GWLP_USERDATA);
-      keys[wParam] = false;
+      setMandelKeys(keys, wParam, false);
       break;
     }
 
@@ -139,7 +170,7 @@ LRESULT CALLBACK WindowEventHandler(HWND window, UINT msg, WPARAM wParam, LPARAM
 }
 
 int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nShowCmd){
-  char keys[256] = {};
+  char keys[MandelKeyCount] = {};
 
   setupOpenGL(instance);
 
@@ -147,7 +178,7 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nSh
   windowClass.style = CS_OWNDC;
   windowClass.lpfnWndProc = WindowEventHandler;
   windowClass.cbClsExtra = 0;
-  windowClass.cbWndExtra = sizeof(char *); // Pointer to keys
+  windowClass.cbWndExtra = NULL;
   windowClass.hInstance = instance;
   windowClass.hIcon = NULL;
   windowClass.hCursor = NULL;
@@ -196,35 +227,22 @@ int WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR lpCmdLine, int nSh
     while(PeekMessageA(&msg, NULL, 0, 0, PM_REMOVE) != 0) {
       if (msg.message == WM_QUIT) {
         running = false;
-		break;
+		    break;
       } else {
         TranslateMessage(&msg);
         DispatchMessageA(&msg);
       }
     }
 
-    if(keys['D'] || keys[VK_RIGHT]){
-      offsetX += 0.1 * zoom;
-    }
-    if(keys['A'] || keys[VK_LEFT]){
-      offsetX -= 0.1 * zoom;
-    }
-    if(keys['W'] || keys[VK_UP]){
-      offsetY += 0.1 * zoom;
-    }
-    if(keys['S'] || keys[VK_DOWN]){
-      offsetY -= 0.1 * zoom;
-    }
-    if(keys[VK_ADD] || keys[VK_OEM_PLUS]){
-      zoom /= 1.1;
-    }
-    if(keys[VK_SUBTRACT] || keys[VK_OEM_MINUS]){
-      zoom *= 1.1;
+    for(int i=0; i<MandelKeyCount; i++){
+      if(keys[i]){
+        mandelHandleInput(&data, (MandelKey)i);
+      }
     }
 
     glClearColor(0.5, 0.0, 1.0, 1.0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    renderMandel(data, screenWidth, screenHeight, offsetX, offsetY, zoom);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BITS);
+    renderMandel(&data, screenWidth, screenHeight);
     SwapBuffers(dc);
   }
 
