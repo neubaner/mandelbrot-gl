@@ -3,7 +3,6 @@
 
 #include "gl.h"
 #include "util.h"
-#include "mandel.h"
 
 enum MandelKey {
   MandelKeyUp,
@@ -12,6 +11,7 @@ enum MandelKey {
   MandelKeyRight,
   MandelKeyZoomIn,
   MandelKeyZoomOut,
+  MandelKeyCount,
 };
 
 static const char* vertexShaderContent = 
@@ -104,7 +104,7 @@ RenderMandelData setupRenderMandel(){
 
   free(fragShaderContents);
 
-  return { program, vao };
+  return { program, vao, 0.0, 0.0, 1.0 };
 }
 
 void mandelHandleInput(RenderMandelData* data, MandelKey key){
@@ -119,7 +119,7 @@ void mandelHandleInput(RenderMandelData* data, MandelKey key){
       data->offsetX -= 0.1 * data->zoom;
       break;
     case MandelKeyRight:
-      data->offsetY += 0.1 * data->zoom;
+      data->offsetX += 0.1 * data->zoom;
       break;
     case MandelKeyZoomIn:
       data->zoom /= 1.1;
@@ -132,22 +132,22 @@ void mandelHandleInput(RenderMandelData* data, MandelKey key){
   }
 }
 
-void renderMandel(RenderMandelData data, int screenWidth, int screenHeight, float offsetX, float offsetY, float zoom){
-  glUseProgram(data.program);
+void renderMandel(RenderMandelData* data, int screenWidth, int screenHeight){
+  glUseProgram(data->program);
 
-  int screenWidthLoc = glGetUniformLocation(data.program, "screenWidth");
-  int screenHeightLoc = glGetUniformLocation(data.program, "screenHeight");
-  int offsetXLoc = glGetUniformLocation(data.program, "offsetX");
-  int offsetYLoc = glGetUniformLocation(data.program, "offsetY");
-  int zoomLoc = glGetUniformLocation(data.program, "zoom");
+  int screenWidthLoc = glGetUniformLocation(data->program, "screenWidth");
+  int screenHeightLoc = glGetUniformLocation(data->program, "screenHeight");
+  int offsetXLoc = glGetUniformLocation(data->program, "offsetX");
+  int offsetYLoc = glGetUniformLocation(data->program, "offsetY");
+  int zoomLoc = glGetUniformLocation(data->program, "zoom");
 
   glUniform1i(screenWidthLoc, screenWidth);
   glUniform1i(screenHeightLoc, screenHeight);
-  glUniform1d(offsetXLoc, offsetX);
-  glUniform1d(offsetYLoc, offsetY);
-  glUniform1d(zoomLoc, zoom);
+  glUniform1d(offsetXLoc, data->offsetX);
+  glUniform1d(offsetYLoc, data->offsetY);
+  glUniform1d(zoomLoc, data->zoom);
 
-  glBindVertexArray(data.vao);
+  glBindVertexArray(data->vao);
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (const GLvoid *)0);
   glBindVertexArray(0);
 }

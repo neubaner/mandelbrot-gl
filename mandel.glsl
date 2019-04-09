@@ -6,7 +6,7 @@ uniform double zoom = 1.0;
 uniform double offsetX = 0.0;
 uniform double offsetY = 0.0;
 
-#define MAX_INTERATIONS 256
+#define MAX_INTERATIONS 3000
 
 in vec4 gl_FragCoord;
 out vec4 out_color;
